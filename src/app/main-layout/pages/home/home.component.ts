@@ -69,7 +69,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
     });
     const data = {
-      title: `Sikh Social`,
+      title: `Sikh.social`,
       description: '',
     };
     this.seoService.updateSeoMetaData(data);

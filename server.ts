@@ -78,14 +78,14 @@ export function app(): express.Express {
         }
         const params = req.params[0];
         var seo: any = {
-          title: 'Sikh Social',
+          title: 'Sikh.social',
           description:
             'Virtually Divine, Truly Yours: Join the Pious Pulse of our Sikh Haven.',
           image:
             'https://tube.sikh.social/assets/banner/sikh-social-Logo.jpg',
           site: 'https://tube.sikh.social/',
           url: 'https://tube.sikh.social' + params,
-          keywords: 'Sikh Social',
+          keywords: 'Sikh.social',
         };
         if (
           params.indexOf('channel/') > -1
@@ -126,7 +126,7 @@ export function app(): express.Express {
           const pdhtml = document.createElement('div');
           pdhtml.innerHTML = post?.postdescription || post?.metadescription;
           const talent = {
-            name: post?.title || post?.albumname || 'Sikh Social Post',
+            name: post?.title || post?.albumname || 'Sikh.social Post',
             description: pdhtml?.textContent || 'Post content',
             image: post?.thumbfilename || post?.metaimage || post?.imageUrl,
           };
