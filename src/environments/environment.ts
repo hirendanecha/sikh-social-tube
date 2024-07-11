@@ -1,7 +1,7 @@
-const loginUrl = 'https://www.hindu.social/login';
-const logoutUrl = 'https://www.hindu.social/logout';
-const frontendUrl = 'https://tube.hindu.social/';
-const backendUrl =  'https://api.hindu.social/';
+const loginUrl = 'https://www.sikh.social/login';
+const logoutUrl = 'https://www.sikh.social/logout';
+const frontendUrl = 'https://tube.sikh.social/';
+const backendUrl =  'https://api.sikh.social/';
 
 // const frontendUrl = 'http://localhost:4200/';
 // const backendUrl = 'http://localhost:8080/';
@@ -15,7 +15,7 @@ export const environment = {
   backendUrl: backendUrl,
   loginUrl: loginUrl,
   apiUrl: `${backendUrl}api/v1/`,
-  domain: '.healing.tube',
+  domain: '.sikh.social',
   wasabiUrl: wasabiUrl,
   socketUrl: `${backendUrl}`,
   conferenceUrl: 'https://facetime.tube/',
