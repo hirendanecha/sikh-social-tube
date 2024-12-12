@@ -19,7 +19,10 @@ import { VideoPostModalComponent } from '../../modals/video-post-modal/video-pos
 import { CreateChannelComponent } from '../../modals/create-channel/create-channel-modal.component';
 import { ConferenceLinkComponent } from '../../modals/create-conference-link/conference-link-modal.component';
 import { ShareService } from '../../services/share.service';
-
+interface LinkData {
+  link: string;
+  imageUrl: string;
+}
 @Component({
   selector: 'app-lf-dashboard',
   templateUrl: './lf-dashboard.component.html',
@@ -42,7 +45,7 @@ export class LfDashboardComponent implements OnInit {
   channelList: any = [];
   mediaApproved: boolean;
   userId: number;
-  advertisementDataList: any = [];
+  advertisementDataList: LinkData[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -52,8 +55,12 @@ export class LfDashboardComponent implements OnInit {
     public modalService: NgbModal,
     private router: Router
   ) {
-    this.useDetails = JSON.parse(this.authService.getUserData() as any);
-    // this.getChannelByUserId(this.useDetails?.UserID);
+    this.authService.loggedInUser$.subscribe((data) => {
+      this.useDetails = data;
+      if (this.useDetails?.channelId) {
+        this.channelId = this.useDetails.channelId
+      }
+    });
     this.route.paramMap.subscribe((paramMap) => {
       // https://facetime.opash.in/
       const name = paramMap.get('name');
@@ -70,9 +77,9 @@ export class LfDashboardComponent implements OnInit {
     //   console.log(params.channelId);
     if (newParams['channelId']) {
       this.channelId = newParams['channelId'];
-      delete newParams['channelId']
+      delete newParams['channelId'];
       const navigationExtras: NavigationExtras = {
-        queryParams: newParams
+        queryParams: newParams,
       };
       this.router.navigate([], navigationExtras);
     }
@@ -89,7 +96,7 @@ export class LfDashboardComponent implements OnInit {
     if (this.userId) {
       this.getChannels();
     }
-    this.shareService.mediaApproved$.subscribe(value => {
+    this.shareService.mediaApproved$.subscribe((value) => {
       this.mediaApproved = value;
     });
     this.getadvertizements();
@@ -117,35 +124,18 @@ export class LfDashboardComponent implements OnInit {
 
   getSearchData(searchText): void {
     this.searchTextEmitter?.emit(searchText);
-    this.searchText = ''
+    this.searchText = '';
   }
 
   openProfile(Id): void {
-    const url = `https://hindu.social/settings/view-profile/${Id}`;
+    const url = `https://sikh.social/settings/view-profile/${Id}`;
     window.open(url, '_blank');
   }
 
   isUserMediaApproved(): boolean {
-  return this.shareService.userDetails.MediaApproved === 1;
-  // return this.useDetails?.MediaApproved === 1;
+    return this.useDetails.MediaApproved === 1;
   }
 
-  // openVideoUploadPopUp(): void {
-  //   const modalRef = this.modalService.open(VideoPostModalComponent, {
-  //     centered: true,
-  //     size: 'lg',
-  //   });
-  //   modalRef.componentInstance.title = `Upload Video`;
-  //   modalRef.componentInstance.confirmButtonLabel = 'Upload Video';
-  //   modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-  //   modalRef.componentInstance.channelList = this.channelList;
-  //   modalRef.result.then((res) => {
-  //     if (res === 'success') {
-  //       window.location.reload();
-  //     }
-  //     // console.log(res);
-  //   });
-  // }
   openVideoUploadPopUp(): void {
     const openModal = () => {
       const modalRef = this.modalService.open(VideoPostModalComponent, {
@@ -162,16 +152,14 @@ export class LfDashboardComponent implements OnInit {
         }
       });
     };
-  
+
     if (!this.channelList || !this.channelList.length) {
-      this.userId = JSON.parse(this.authService.getUserData() as any)?.Id;
+      this.userId = this.useDetails?.UserID;
       const apiUrl = `${environment.apiUrl}channels/get-channels/${this.userId}`;
-      this.commonService.get(apiUrl).subscribe(
-        (res) => {
-          this.channelList = res.data;
-          openModal();
-        }
-      )
+      this.commonService.get(apiUrl).subscribe((res) => {
+        this.channelList = res.data;
+        openModal();
+      });
     } else {
       openModal();
     }
@@ -206,12 +194,12 @@ export class LfDashboardComponent implements OnInit {
   }
 
   getChannels(): void {
-    this.userId = JSON.parse(this.authService.getUserData() as any)?.Id;
+    this.userId = this.useDetails?.UserID;
     const apiUrl = `${environment.apiUrl}channels/get-channels/${this.userId}`;
     this.commonService.get(apiUrl).subscribe({
       next: (res) => {
         this.channelList = res.data;
-        let channelIds = this.channelList.map(e => e.id);
+        let channelIds = this.channelList.map((e) => e.id);
         localStorage.setItem('get-channels', JSON.stringify(channelIds));
         // console.log(this.channelList);
       },

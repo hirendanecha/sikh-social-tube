@@ -69,7 +69,7 @@ export class SeoService {
     }
 
     if (!tagValue.image) {
-      tagValue.image = 'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg';
+      tagValue.image = 'https://www.sikh.social/assets/images/profile-cover.png';
     }
 
     this.meta.updateTag({
@@ -155,7 +155,7 @@ export class SeoService {
       },
       ]
     };
-    console.log('seoObj', seoObj, obj?.description)
+    // console.log('seoObj', seoObj, obj?.description)
     this.updateComponentSeo(seoObj, isMainPage);
   }
 }
